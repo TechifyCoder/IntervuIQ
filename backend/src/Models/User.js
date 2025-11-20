@@ -21,4 +21,4 @@ const userSchema = new mongoose.Schema({
     }
 },{timeseries:true});
 
-export default mongoose.model("User", userSchema);
+export const User = mongoose.model("User", userSchema);
