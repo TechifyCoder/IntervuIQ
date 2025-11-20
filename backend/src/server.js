@@ -8,33 +8,42 @@ import { serve } from 'inngest/express';
 import { inngest, functions } from './lib/inngest.js';
 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Middleware
 app.use(express.json());
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+
+// Inngest route
 app.use('/api/inngest', serve({ client: inngest, functions }));
 
-// ====== YE SABSE UPAR HONA CHAHIYE (listen se pehle) ======
+// ========= PRODUCTION: FRONTEND SERVE (sabse pehle!) =========
 if (process.env.NODE_ENV === "production") {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
+  // Correct path for Render (Vite dist folder)
+  const frontendPath = path.join(__dirname, '../../frontend/dist');
+  
+  app.use(express.static(frontendPath));
 
-  app.use(express.static(path.join(__dirname, "../../frontend/dist")));
-
-  // Sab routes jo API nahi hain → React ko bhej do
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
+  // IMPORTANT: API routes se pehle ye rakhna, lekin API ko exclude karna
+  app.get(/^\/(?!api|api\/).*/, (req, res) => {   // ← sirf /api ko chhod kar baaki sab pe React bhejega
+    res.sendFile(path.join(frontendPath, 'index.html'));
   });
 }
 
-// Test routes (production mein bhi chalenge lekin React override kar dega)
+// Baaki sab API routes yahan aayenge (import kar lo apne routes)
 app.get('/api', (req, res) => {
-  res.json({ message: "Backend working!" });
+  res.json({ message: "Backend API working!" });
 });
+
+// agar aur routes hain to yahan import kar lo
+// import userRoutes from './routes/user.js';
+// app.use('/api/users', userRoutes);
+// etc.
 
 // Server start
 const PORT = ENV.PORT || 5000;
 app.listen(PORT, async () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
   await mongoConnect();
 });
