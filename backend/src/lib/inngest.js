@@ -1,6 +1,6 @@
 import { Inngest } from 'inngest'
 import { mongoConnect } from './db.js'
-import { User } from 'lucide-react';
+import { User } from '../Models/User.js';
 
 export const inngest = new Inngest({id:"inter-iq"})
 
