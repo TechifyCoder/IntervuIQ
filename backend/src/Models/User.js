@@ -21,6 +21,4 @@ const userSchema = new mongoose.Schema({
     }
 },{timeseries:true});
 
-const User = mongoose.model("User",userSchema)
-
-export default User
+export default mongoose.model("User", userSchema);
