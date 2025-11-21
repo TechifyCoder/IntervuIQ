@@ -10,7 +10,7 @@ const app = express();
 
 app.use(express.json())
 
-// credentials menas : server allows to a browser include cokkies on request
+// credentials means : server allows to a browser include cokkies on request
 app.use(cors({origin:ENV.CLIENT_URL,credentials:true}))
 
 app.use('/api/inngest',serve({client:inngest,functions}))
