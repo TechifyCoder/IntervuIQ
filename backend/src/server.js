@@ -45,6 +45,7 @@ const startServer = async () => {
             app.listen(ENV.PORT,() => {
                 console.log(`Server is running on port ${ENV.PORT}`)
                 mongoConnect();
+                console.log(req.body);
             })        
     } catch (error) {
         console.error("unable to connect the server ",error)
