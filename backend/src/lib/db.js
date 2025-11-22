@@ -7,7 +7,7 @@ export const mongoConnect = async () => {
             throw new error("Envirment varible is not connect")
         }
         const connection = await mongoose.connect(ENV.MONGO_URL)
-        console.log("✅ Connected to mongoDB successfully");
+        console.log("✅ Connected to mongoDB successfully",connection.connection.host);
     } catch (error) {
         console.error("❌ Database is not connected",error)
         process.exit(1)
