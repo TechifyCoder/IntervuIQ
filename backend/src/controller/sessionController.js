@@ -38,3 +38,12 @@ export const createSession = async(req,res) => {
     }
 }
 
+export const getActiveSession = async(req,res) => {}
+
+export const getMyPastSession = async(req,res) => {}
+
+export const getSessionById = async(req,res) => {}
+
+export const joinSession = async(req,res) => {}
+
+export const endSession = async(req,res) => {}
