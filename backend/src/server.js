@@ -8,6 +8,7 @@ import { serve } from 'inngest/express'
 import { inngest,functions } from './lib/inngest.js';
 import { protectRoute } from './middleware/protectRoute.js';
 import chatRoute from './routes/chatRoute.js'
+import sessionRoute from './routes/sessionRoute.js'
 const app = express();
 
 
@@ -18,6 +19,7 @@ app.use(cors({origin:ENV.CLIENT_URL,credentials:true}))
 
 app.use('/api/inngest',serve({client:inngest,functions}))
 app.use('/api/chat',chatRoute)
+app.use('/api/session',sessionRoute)
 
 const __dirname = path.resolve();
 app.use(clerkMiddleware())
