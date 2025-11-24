@@ -38,7 +38,20 @@ export const createSession = async(req,res) => {
     }
 }
 
-export const getActiveSession = async(req,res) => {}
+export const getActiveSession = async(_,res) => {
+    try {
+        const sessions = await Session.find({status:"active"})
+         // get the host id and show: name profileImage email clerkId come from User Model
+        .populate("host","name profileImage email clerkId")  
+        .sort({createdAt: -1})
+        .limit(20);
+
+        res.status(200).json({sessions})
+    } catch (error) {
+        console.error("Internal getActiveSession error")
+        res.status(500).json({msg:"Internal server error"})          
+    }
+}
 
 export const getMyPastSession = async(req,res) => {}
 
