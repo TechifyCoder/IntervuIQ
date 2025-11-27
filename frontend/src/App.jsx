@@ -1,19 +1,20 @@
-import { useState } from 'react'
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
+import react from 'react'
+import { Routes,Route, Navigate } from 'react-router'
+import { Toaster } from "react-hot-toast";
+import { useUser } from '@clerk/clerk-react';
+import HomePage from './pages/HomePage';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { isSignedIn, isLoaded } = useUser();
 
+  if(!isLoaded) return null
   return (
-    <header>
-      <SignedOut>
-        <SignInButton />
-      </SignedOut>
-      <SignedIn>
-        <UserButton />
-      </SignedIn>
-    </header>
-
+    <>
+    <Routes>
+        <Route path="/" element={!isSignedIn ? <HomePage /> : <Navigate to={"/dashboard"} />}  />
+    </Routes>
+     <Toaster toastOptions={{ duration: 3000 }} />
+    </>
   )
 }
 
