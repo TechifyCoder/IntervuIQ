@@ -11,67 +11,72 @@ const LANGUAGE_VERSION = {
 }
 
 export async function executeCode(language, code) {
-    try {
-        const languageConfig = LANGUAGE_VERSION[language];
-        if (!languageConfig) {
-            return {
-                success: false,
-                error: `Unsupported Language : ${language}`
-            };
-        }
-
-        const responce = await fetch(`${PISTON_API}/execute`, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                language: languageConfig.language,
-                version: languageConfig.version,
-                files: [
-                    {
-                        name: `main.${getFileExtension(language)}`,
-                        content: code
-                    }
-                ]
-            })
-        });
-        if (!responce.ok) {
-            return {
-                success: false,
-                error: `HTTP error! status ${responce.status}`
-            }
-        }
-
-        const data = data.run.output || ""
-        const stderr = data.run.stderr || ""
-
-        if (stderr) {
-            return {
-                success: false,
-                output: output,
-                error: stderr,
-            }
-        }
-
-        return {
-            success: true,
-            output: output || "No Output"
-        }
-    } catch (error) {
-        return {
-            success: false,
-            error: `Failed to execute code : ${error.message}`
-        }
+  try {
+    const languageConfig = LANGUAGE_VERSION[language];
+    if (!languageConfig) {
+      return {
+        success: false,
+        error: `Unsupported Language : ${language}`,
+      };
     }
+
+    const response = await fetch(`${PISTON_API}/execute`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        language: languageConfig.language,
+        version: languageConfig.version,
+        files: [
+          {
+            name: `main.${getFileExtension(language)}`,
+            content: code,
+          },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: `HTTP error! status ${response.status}`,
+      };
+    }
+
+    const data = await response.json();
+    const run = data.run || {};
+
+    const output = run.output || run.stdout || "";
+    const stderr = run.stderr || "";
+
+    if (stderr) {
+      return {
+        success: false,
+        output,
+        error: stderr,
+      };
+    }
+
+    return {
+      success: true,
+      output: output || "No Output",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: `Failed to execute code : ${error.message}`,
+    };
+  }
 }
 
-function getFileExtension(language) {
-  const extensions = {
-    javascript: "js",
-    python: "py",
-    java: "java",
-  };
 
-  return extensions[language] || "txt";
+function getFileExtension(language) {
+    const extensions = {
+        javascript: "js",
+        python: "py",
+        java: "java",
+    };
+
+    return extensions[language] || "txt";
 }

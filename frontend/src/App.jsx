@@ -15,7 +15,7 @@ function App() {
   return (
     <>
     <Routes>
-        <Route path="/" element={!isSignedIn ? <HomePage /> : <Navigate to={"/dashboard"} />}  />
+        <Route path="/" element={!isSignedIn ? <HomePage /> : <Navigate to={"/problems"} />}  />
         <Route path="/problems" element={!isSignedIn ? <ProblemPage /> : <Navigate to={"/dashboard"} />}  />
         <Route path="/problem/:id" element={!isSignedIn ? <ProblemDetailPage /> : <Navigate to={"/dashboard"} />}  />
         {/* <Route path="/prob" element={ <ProblemDescription /> }  /> */}
