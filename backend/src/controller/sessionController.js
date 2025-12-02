@@ -4,39 +4,56 @@ import Session from "../Models/Session.js"
 
 export const createSession = async (req, res) => {
     try {
-        const { problem, difficulty } = req.body
+        const { problem, difficulty } = req.body;
         const userId = req.user._id;
-        const clerkId = req.user.clerkId;
+        const clerkId = req.user.clerkId;   // ab ye undefined nahi hoga
 
         if (!problem || !difficulty) {
-            return res.status(400).json({ msg: "problem and difficulty are required" })
+            return res.status(400).json({ msg: "problem and difficulty are required" });
         }
-        const callId = `session_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-        const session = await Session.create({ problem, difficulty, host: userId, callId });
 
-        // video Straeming
+        const callId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+        const session = await Session.create({
+            problem,
+            difficulty,
+            host: userId,
+            participant: null,
+            callId,
+            status: "active"
+        });
+
+        // Stream Video Call
         await straemClient.video.call("default", callId).getOrCreate({
             data: {
                 created_by_id: clerkId,
-                custom: { problem, difficulty, sessionId: session._id.toString() },
-            },
-        })
+                custom: {
+                    problem,
+                    difficulty,
+                    sessionId: session._id.toString()
+                }
+            }
+        });
 
-        //chat messaging
+        // Stream Chat Channel
         const channel = chatClient.channel("messaging", callId, {
-            name: `${problem} Session`,
+            name: `${problem} - ${difficulty}`,
             created_by_id: clerkId,
             members: [clerkId]
-        })
-
+        });
         await channel.create();
 
-        res.status(201).json({ session: session })
+
+        // createSession ke end mein
+        res.status(201).json({
+            success: true,
+            session
+        });
     } catch (error) {
-        console.error("Internal createSession error")
-        res.status(500).json({ msg: "Internal server error" })
+        console.error("createSession error:", error.message);
+        res.status(500).json({ msg: "Failed to create session", error: error.message });
     }
-}
+};
 
 export const getActiveSession = async (_, res) => {
     try {
@@ -55,26 +72,32 @@ export const getActiveSession = async (_, res) => {
 
 export const getMyPastSession = async (req, res) => {
     try {
+        const userId = req.user._id;
+
         const sessions = await Session.find({
             status: "completed",
-            $or: [{ host: userId, participant: userId }]
-                .sort({ createdAt: -1 })
-                .limit(20)
-        });
+            $or: [
+                { host: userId },
+                { participant: userId }
+            ]
+        })
+            .sort({ createdAt: -1 })
+            .limit(20)
+            .populate("host", "name profileImage email clerkId")
+            .populate("participant", "name profileImage email clerkId");
 
         res.status(200).json({ sessions });
     } catch (error) {
-        console.error("Internal getMyPastSession error")
-        res.status(500).json({ msg: "Internal server error" })
+        console.error("Error in getMyPastSession:", error.message);
+        res.status(500).json({ msg: "Internal server error" });
     }
 }
-
 export const getSessionById = async (req, res) => {
     try {
         const { id } = req.params
         const session = await Session.findById(id)
-            .populate(host, "name email profileImage clerkId")
-            .populate(participant, "name email profileImage clerkId")
+            .populate("host", "name email profileImage clerkId")           // ← quotes mein
+            .populate("participant", "name email profileImage clerkId")   // ← quotes mein
 
         if (!session) return res.status(400).json({ msg: "Session not found" })
 
@@ -106,7 +129,7 @@ export const joinSession = async (req, res) => {
         if (sessions.participant) return res.status(409).json({ msg: "Session is full" })
 
         sessions.participant = userId
-        sessions.save();
+        await sessions.save();
 
         const channel = chatClient.channel("messaging", sessions.callId)
         await channel.addMembers([clerkId])
@@ -141,7 +164,7 @@ export const endSession = async (req, res) => {
         await chat.delete();
 
         sessions.status = "completed"
-        sessions.save();
+        await sessions.save();
 
         res.status(200).json({ sessions })
 

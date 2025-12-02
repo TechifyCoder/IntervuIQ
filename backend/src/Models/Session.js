@@ -7,7 +7,7 @@ const sessionSchema = new mongoose.Schema({
     },
     difficulty:{
         type:String,
-        enum:["Hard","Medium","Easy"],
+        enum:["Easy","Medium","Hard"],
         required:true
     },
     host:{
