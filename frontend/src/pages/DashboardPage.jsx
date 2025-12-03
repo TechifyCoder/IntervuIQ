@@ -33,10 +33,10 @@ const DashboardPage = () => {
             },
             {
                 onSuccess: (data) => {
-                    console.log("Session created:", data); // ← ye laga do pehle
+                    console.log("Session created:", data);
                     setShowCreateModel(false);
 
-                    // Ye line safe bana do
+
                     const sessionId = data?.session?._id || data?._id;
                     if (sessionId) {
                         navigate(`/session/${sessionId}`);
@@ -79,11 +79,11 @@ const DashboardPage = () => {
                             isLoading={loadingActiveSessions}
                             isUserInSession={isUserInSession}
                         />
-                    
+
+                    </div>
+                    <RecentSession sessions={recentSessions} isLoding={loadingRecentSession} />
                 </div>
-                <RecentSession sessions={recentSessions} isLoding={loadingRecentSession} />
-            </div>
-        </div >
+            </div >
             <CreateSessionModal
                 isOpen={showCreateModel}
                 onClose={() => setShowCreateModel(false)}
@@ -92,7 +92,7 @@ const DashboardPage = () => {
                 onCreateRoom={handleCreateRoom}
                 isCreating={createSessionMutation.isPending}
             />
-        
+
         </>
     );
 }

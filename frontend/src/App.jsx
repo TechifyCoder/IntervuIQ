@@ -8,6 +8,7 @@ import ProblemPage from './pages/ProblemPage';
 import ProblemDetailPage from './pages/ProblemDetailPage';
 import ProblemDescription from './component/ProblemDescription';
 import DashboardPage from './pages/DashboardPage';
+import SessionPage from './pages/SessionPage';
 
 function App() {
   const { isSignedIn, isLoaded } = useUser();
@@ -33,7 +34,8 @@ function App() {
           path="/problem/:id" 
           element={isSignedIn ? <ProblemDetailPage /> : <Navigate to="/" replace />} 
         />
-
+      <Route path="/session/:id"
+       element={isSignedIn ? <SessionPage /> : <Navigate to={"/"} />} />
         {/* Optional: agar koi galat URL dale */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
