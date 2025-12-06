@@ -40,6 +40,8 @@ const SessionPage = () => {
   const [selectedLanguage, setSelectedLanguage] = useState("javascript");
   const [code, setCode] = useState(problemData?.starterCode?.[selectedLanguage] || "");
 
+  
+
   useEffect(() => {
     if (!session || !user || lodingSession) return;
     if (!isHost && !isParticipant) return

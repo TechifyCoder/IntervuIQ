@@ -341,20 +341,24 @@ print(maxArea([1,1]))  # Expected: 1`,
   },
 };
 
+// data/problem.js ya jahan bhi hai
 export const LANGUAGE_CONFIG = {
   javascript: {
     name: "JavaScript",
     icon: "/javascript.png",
     monacoLang: "javascript",
+    version: "18.15.0"
   },
   python: {
     name: "Python",
     icon: "/python.png",
     monacoLang: "python",
+    version: "3.10.0"   // ← YE DAAL DIYA
   },
   java: {
     name: "Java",
     icon: "/java.png",
     monacoLang: "java",
+    version: "15.0.2"   // ← YE BHI DAAL DIYA
   },
 };

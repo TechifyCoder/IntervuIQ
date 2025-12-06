@@ -46,17 +46,19 @@ const CodeEditorPannel = ({
             </div>
             <div className="flex-1">
                 <Editor
-                    height={"100%"}
-                    language={LANGUAGE_CONFIG[selectedLanguage].monacoLang}
-                    value={code}
+                    height="100%"
+                    language={LANGUAGE_CONFIG[selectedLanguage]?.monacoLang || "javascript"}
+                    value={code || ""}
                     onChange={onCodeChange}
                     theme="vs-dark"
+                    loading={<div className="flex items-center justify-center h-full"><Loader2Icon className="animate-spin" /></div>}
                     options={{
                         fontSize: 16,
                         lineNumbers: "on",
                         scrollBeyondLastLine: false,
                         automaticLayout: true,
                         minimap: { enabled: false },
+                        readOnly: false,
                     }}
                 />
             </div>
