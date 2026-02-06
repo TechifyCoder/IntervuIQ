@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router';
 import { UserButton } from '@clerk/clerk-react';
 
 const Navbar = () => {
-    const location = useLocation();
+    const location = useLocation();``
 
     const isActive = (path) => location.pathname === path;
     return (

@@ -10,7 +10,7 @@ const CodeEditorPannel = ({
     isRunning,
     onLanguageChange,
     onCodeChange,
-    onRuncode,
+     onRunCode,
 }) => {
 
     return (
@@ -30,7 +30,7 @@ const CodeEditorPannel = ({
                         ))}
                     </select>
                 </div>
-                <button className='btn btn-primary btn-sm gap-2' disabled={isRunning} onClick={onRuncode}>
+                <button className='btn btn-primary btn-sm gap-2' disabled={isRunning} onClick={onRunCode}>
                     {isRunning ? (
                         <>
                             <Loader2Icon className='size-4 animate-spin' />
