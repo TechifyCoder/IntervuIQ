@@ -2,9 +2,9 @@
 import axios from 'axios'
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.DEV 
+  baseURL: import.meta.env.MODE === "development"
     ? 'http://localhost:4000/api'          // development
-    : '/api',                              // production (relative → works with Vite proxy or same-domain)
+    : import.meta.env.VITE_BACKEND_URL ? `${import.meta.env.VITE_BACKEND_URL}/api` : '/api', // production
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
