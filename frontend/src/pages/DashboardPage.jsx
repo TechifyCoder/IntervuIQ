@@ -68,7 +68,7 @@ const DashboardPage = () => {
                 <WelcomeSection onCreateSession={() => setShowCreateModel(true)} />
 
                 {/* Grid layout */}
-                <div className='container mx-auto px-6 pb-16'>
+                <div className='max-w-7xl mx-auto px-6 pb-16'>
                     <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
                         <StatusCard
                             activeSessionsCount={activeSessions.length}
