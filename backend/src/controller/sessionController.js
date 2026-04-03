@@ -1,4 +1,4 @@
-import { chatClient, straemClient } from "../lib/stream.js";
+import { chatClient, streamClient } from "../lib/stream.js";
 import Session from "../Models/Session.js"
 
 
@@ -24,7 +24,7 @@ export const createSession = async (req, res) => {
         });
 
         // Stream Video Call
-        await straemClient.video.call("default", callId).getOrCreate({
+        await streamClient.video.call("default", callId).getOrCreate({
             data: {
                 created_by_id: clerkId,
                 custom: {
@@ -157,7 +157,7 @@ export const endSession = async (req, res) => {
             res.status(400).json({ msg: "Session is already completed" })
         }
 
-        const call = straemClient.video.call('default', sessions.callId)
+        const call = streamClient.video.call('default', sessions.callId)
         await call.delete({ hard: true });
 
         const chat = chatClient.channel('messaging', sessions.callId)

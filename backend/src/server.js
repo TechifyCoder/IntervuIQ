@@ -17,7 +17,10 @@ const app = express();
 app.use(express.json())
 
 // credentials means : server allows to a browser include cokkies on request
-app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }))
+app.use(cors({ 
+  origin: [ENV.CLIENT_URL, "http://localhost:5173", "http://localhost:5174"], 
+  credentials: true 
+}))
 
 app.use(clerkMiddleware())
 
