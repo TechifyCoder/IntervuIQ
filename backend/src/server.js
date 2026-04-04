@@ -17,10 +17,22 @@ const app = express();
 app.use(express.json())
 
 // credentials means : server allows to a browser include cokkies on request
-app.use(cors({ 
-  origin: [ENV.CLIENT_URL, "http://localhost:5173", "http://localhost:5174"], 
+const allowedOrigins = [
+  ENV.CLIENT_URL,
+  "http://localhost:5173",
+  "http://localhost:5174"
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS blocked origin: ' + origin));
+    }
+  },
   credentials: true 
-}))
+}));
 
 app.use(clerkMiddleware())
 
