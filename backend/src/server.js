@@ -25,13 +25,14 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
+    AC
     if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
       callback(null, true);
     } else {
       callback(new Error('CORS blocked origin: ' + origin));
     }
   },
-  credentials: true 
+  credentials: true
 }));
 
 app.use(clerkMiddleware())
@@ -101,9 +102,9 @@ app.get('/api/debug/create-user', async (req, res) => {
 if (ENV.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")))
 
-  app.get("/{*any}", (req, res) => {
-    res.sendFile((path.join(__dirname, "../frontend", "dist", "index.html")))
-  })
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+  });
 }
 
 const startServer = async () => {
