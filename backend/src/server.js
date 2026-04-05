@@ -88,13 +88,12 @@ app.get('/api/debug/create-user', async (req, res) => {
 });
 
 if (ENV.NODE_ENV === "production") {
-  const rootDir = process.cwd();
-  const frontendDistPath = path.join(rootDir, "frontend", "dist");
-  
-  app.use(express.static(frontendDistPath));
+  // Corrected path resolution based on vercel.json includeFiles setup
+  const __dirname = path.resolve();
+  app.use(express.static(path.join(__dirname, "dist")));
 
   app.get("*", (req, res) => {
-    res.sendFile(path.join(frontendDistPath, "index.html"));
+    res.sendFile(path.join(__dirname, "dist", "index.html"));
   });
 }
 
